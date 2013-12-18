@@ -23,6 +23,16 @@
         Introduction, why do you need this?
     </p>
 
+    <p>
+        <a href="#goto1">Go to 1</a>
+    </p><p>
+    <a href="#goto2">Go to 2</a>
+</p><p>
+    <a href="#goto3">Go to 3</a>
+</p><p>
+    <a href="#goto4">Go to 4</a>
+</p>
+
     <!-- Start sticky anchor areas -->
     <div class="demo_container">
         <p>
@@ -70,14 +80,14 @@
     </div>
     <!-- End responsive menu -->
 
-    <div id="goto1">
+    <div id="goto3">
         <p>Tall containers</p>
         <p>are always</p>
         <p>very nice</p>
         <p>to look at</p>
     </div>
 
-    <div id="goto2" class="demo_container4" style="background: red;">
+    <div id="goto4" class="demo_container4" style="background: red;">
         <p>Tall containers</p>
         <p>are always</p>
         <p>very nice</p>
@@ -117,9 +127,7 @@
         $('.demo_container').stickyAnchorArea({
             scrollUntil: '.demo_container2'
         });
-        $('.demo_container3').stickyAnchorArea({
-            scrollUntil: '.demo_container4'
-        });
+        $('.demo_container3').stickyAnchorArea();
     });
 </script>
 

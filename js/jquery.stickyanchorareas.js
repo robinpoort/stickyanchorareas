@@ -33,27 +33,26 @@
             // user-provided options (if any)
             plugin.settings = $.extend({}, defaults, options);
 
-            // code goes here
+            // Test if the browser supports position fixed by testing the top offset of a fixed element
+            $('<div id="canBrowserhandleFixedPosition" style="position:fixed;width:0;height:0;overflow:hidden;top:100px;"></div>').prependTo('body');
+            var theOffset = $('#canBrowserhandleFixedPosition').offset().top;
+            if( theOffset >= 100 ) { theOffset = true } else { theOffset = false }
+            $('body').remove('#canBrowserhandleFixedPosition');
 
-
+            // Variables
             var stickyElem = $(element),
                 stickyElemOffset = Math.ceil($(element).offset().top),
                 stickyElemHeight = $(element).height(),
                 stickyElemWidth = $(element).width(),
-                scrollUntilContainer = plugin.settings.scrollUntil,
-                scrollUntil = Math.ceil( $(scrollUntilContainer).offset().top),
-                absolutePosition = (scrollUntil - stickyElemOffset - stickyElemHeight);
+                absolutePosition = (scrollUntil - stickyElemOffset - stickyElemHeight),
+                urlHash = window.location.hash;
 
-
-
-            console.log('stickyElem: ' + stickyElem);
-            console.log('stickyElemOffset: ' + stickyElemOffset);
-            console.log('stickyElemHeight: ' + stickyElemHeight);
-            console.log('stickyElemWidth: ' + stickyElemWidth);
-            console.log('scrollUntilContainer: ' + scrollUntilContainer);
-            console.log('scrollUntil: ' + scrollUntil);
-
-
+            // ScrollUntil
+            if( plugin.settings.scrollUntil ) {
+                var scrollUntilContainer = plugin.settings.scrollUntil,
+                    scrollUntil = Math.ceil( $(scrollUntilContainer).offset().top),
+                    absolutePosition = (scrollUntil - stickyElemOffset - stickyElemHeight);
+            }
 
 
             // Custom functions
@@ -65,10 +64,8 @@
             }
 
 
-
             stickyElem.wrap('<div class="stickAround"></div>');
             stickyElem.parent().css({'position' : 'relative', 'height' : stickyElemHeight});
-
 
 
             $(window).on('ready resize scroll', function() {
@@ -81,13 +78,67 @@
                 else if ( scrollTop < stickyElemOffset ) {
                     stickyElem.unFixedPosition();
                 }
-                if ( scrollTop > (scrollUntil - stickyElemHeight) ) {
-                    stickyElem.css({'position' : 'absolute', 'top' : absolutePosition });
-                }
-                if ( scrollTop > scrollUntil ) {
-                    stickyElem.unFixedPosition();
+                if ( plugin.settings.scrollUntil ) {
+                    if ( scrollTop > (scrollUntil - stickyElemHeight) ) {
+                        stickyElem.css({'position' : 'absolute', 'top' : absolutePosition });
+                    }
+                    if ( scrollTop > scrollUntil ) {
+                        stickyElem.unFixedPosition();
+                    }
                 }
             });
+
+
+
+
+            /*
+             Anchor linking with a fixed menu:
+             Duplicate the target element and give it a negative margin of the height of the menu
+             */
+
+            // Check the position of elements in the markup, has to be after the menu
+            $.fn.isAfter = function(elem) {
+                if(typeof(elem) == "string") elem = $(elem);
+                return this.add(elem).index(elem) == 0;
+            }
+
+            // Create empty anchors array
+            var elements = [];
+
+            // The function to call for adding divs
+            function addAnchorDiv(elem) {
+                if( $(elem).isAfter(stickyElem)) {
+
+                    var elemClean = elem.replace('#', '');
+
+                    // Check if the current anchor was already processed
+                    if($.inArray(elemClean, elements) == -1)
+                    {
+                        $(elem).before('<div class="relativeAnchorDiv" id="'+elemClean+'" style="position:relative;top:-'+stickyElemHeight+'px;z-index:-99;">');
+
+                        // Add current anchor to array
+                        elements.push(elemClean);
+                    }
+                }
+            }
+
+            if( theOffset == true ) {
+
+                // The URL method
+                addAnchorDiv(urlHash);
+
+                // Per link method
+                $('a[href*=#]:not([href=#])').each(function() {
+
+                    var target = $(this).prop('hash');
+
+                    // Add items
+                    $(target).each(function() {
+                        // Add extra div code
+                        addAnchorDiv(target);
+                    });
+                });
+            }
 
 
 
