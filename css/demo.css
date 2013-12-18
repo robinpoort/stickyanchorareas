@@ -1,0 +1,37 @@
+body {
+  background: #eee;
+  margin: 0;
+  padding: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.demo_container {
+  background: #ccc;
+  display: block;
+  width: 100%;
+}
+.demo_container3 {
+  background: #ccc;
+  display: block;
+  width: 100%;
+}
+
+.demo_container:before,
+.demo_container:after {
+  display: table;
+  content: " ";
+}
+
+.demo_container:after {
+  clear: both;
+}
+
+.demo_container3:before,
+.demo_container3:after {
+  display: table;
+  content: " ";
+}
+
+.demo_container3:after {
+  clear: both;
+}
