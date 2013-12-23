@@ -43,8 +43,6 @@
             var stickyElem = $(element),
                 stickyElemOffset = Math.ceil($(element).offset().top),
                 stickyElemHeight = $(element).height(),
-                stickyElemWidth = $(element).width(),
-                absolutePosition = (scrollUntil - stickyElemOffset - stickyElemHeight),
                 urlHash = window.location.hash;
 
             // ScrollUntil
@@ -56,7 +54,7 @@
 
 
             // Custom functions
-            $.fn.fixedPosition = function(stickyElemHeight) {
+            $.fn.fixedPosition = function(stickyElemHeight, stickyElemWidth) {
                 this.css({'position' : 'fixed', 'top' : '0', 'height' : stickyElemHeight, 'width' : stickyElemWidth});
             }
             $.fn.unFixedPosition = function() {
@@ -64,16 +62,25 @@
             }
 
 
+            // Add div to all elements after the sticky area who are linked to or are the location.hash
             stickyElem.wrap('<div class="stickAround"></div>');
             stickyElem.parent().css({'position' : 'relative', 'height' : stickyElemHeight});
 
 
             $(window).on('ready resize scroll', function() {
-                var scrollTop = Math.ceil( $(window).scrollTop() );
-                stickyElemHeight = $(element).height();
+                var scrollTop = Math.ceil( $(window).scrollTop()),
+                    stickyElemOffset = Math.ceil(stickyElem.parent('.stickAround').offset().top),
+                    stickyElemHeight = $(element).height(),
+                    stickyElemHeight = $(element).height(),
+                    stickyElemWidth = stickyElem.parent('.stickAround').width();
+
+                if( plugin.settings.scrollUntil ) {
+                    var scrollUntil = Math.ceil( $(scrollUntilContainer).offset().top),
+                        absolutePosition = (scrollUntil - stickyElemOffset - stickyElemHeight);
+                }
 
                 if ( scrollTop > stickyElemOffset ) {
-                    $(element).fixedPosition(stickyElemHeight);
+                    $(element).fixedPosition(stickyElemHeight, stickyElemWidth);
                 }
                 else if ( scrollTop < stickyElemOffset ) {
                     stickyElem.unFixedPosition();
@@ -88,15 +95,7 @@
                 }
             });
 
-
-
-
-            /*
-             Anchor linking with a fixed menu:
-             Duplicate the target element and give it a negative margin of the height of the menu
-             */
-
-            // Check the position of elements in the markup, has to be after the menu
+            // Check the position of elements in the markup
             $.fn.isAfter = function(elem) {
                 if(typeof(elem) == "string") elem = $(elem);
                 return this.add(elem).index(elem) == 0;
@@ -114,7 +113,7 @@
                     // Check if the current anchor was already processed
                     if($.inArray(elemClean, elements) == -1)
                     {
-                        $(elem).before('<div class="relativeAnchorDiv" id="'+elemClean+'" style="position:relative;top:-'+stickyElemHeight+'px;z-index:-99;">');
+                        $(elem).before('<div class="relativeAnchorDiv" id="'+elemClean+'" style="position:relative;top:-'+stickyElemHeight+'px;z-index:-99;height:0;overflow:hidden;">');
 
                         // Add current anchor to array
                         elements.push(elemClean);
@@ -139,12 +138,6 @@
                     });
                 });
             }
-
-
-
-
-
-
 
         }
 
