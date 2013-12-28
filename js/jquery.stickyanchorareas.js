@@ -37,25 +37,24 @@
             $('<div id="canBrowserhandleFixedPosition" style="position:fixed;width:0;height:0;overflow:hidden;top:100px;"></div>').prependTo('body');
             var theOffset = $('#canBrowserhandleFixedPosition').offset().top;
             if( theOffset >= 100 ) { theOffset = true } else { theOffset = false }
-            $('body').remove('#canBrowserhandleFixedPosition');
+            $('#canBrowserhandleFixedPosition').remove();
 
             // Variables
             var stickyElem = $(element),
-                stickyElemOffset = Math.ceil($(element).offset().top),
-                stickyElemHeight = $(element).height(),
+                stickyElemHeight = $(element).outerHeight(),
+                stickyElemZindex = $(element).css('z-index'),
                 urlHash = window.location.hash;
+
 
             // ScrollUntil
             if( plugin.settings.scrollUntil ) {
-                var scrollUntilContainer = plugin.settings.scrollUntil,
-                    scrollUntil = Math.ceil( $(scrollUntilContainer).offset().top),
-                    absolutePosition = (scrollUntil - stickyElemOffset - stickyElemHeight);
+                var scrollUntilContainer = plugin.settings.scrollUntil;
             }
 
 
             // Custom functions
-            $.fn.fixedPosition = function(stickyElemHeight, stickyElemWidth) {
-                this.css({'position' : 'fixed', 'top' : '0', 'height' : stickyElemHeight, 'width' : stickyElemWidth});
+            $.fn.fixedPosition = function(stickyElemWidth) {
+                this.css({'position' : 'fixed', 'top' : '0', 'height' : 'auto', 'width' : stickyElemWidth});
             }
             $.fn.unFixedPosition = function() {
                 this.removeAttr('style');
@@ -64,25 +63,28 @@
 
             // Add div to all elements after the sticky area who are linked to or are the location.hash
             stickyElem.wrap('<div class="stickAround"></div>');
-            stickyElem.parent().css({'position' : 'relative', 'height' : stickyElemHeight});
 
 
-            $(window).on('ready resize scroll', function() {
+            function makeSticky() {
                 var scrollTop = Math.ceil( $(window).scrollTop()),
                     stickyElemOffset = Math.ceil(stickyElem.parent('.stickAround').offset().top),
-                    stickyElemHeight = $(element).height(),
-                    stickyElemHeight = $(element).height(),
+                    stickyElemHeight = $(element).outerHeight(),
                     stickyElemWidth = stickyElem.parent('.stickAround').width();
+
+
+                // Give the surrounding div the height of the element
+                stickyElem.parent().css({ 'position' : 'relative', 'height' : stickyElemHeight, 'z-index' : stickyElemZindex });
+
 
                 if( plugin.settings.scrollUntil ) {
                     var scrollUntil = Math.ceil( $(scrollUntilContainer).offset().top),
                         absolutePosition = (scrollUntil - stickyElemOffset - stickyElemHeight);
                 }
 
-                if ( scrollTop > stickyElemOffset ) {
-                    $(element).fixedPosition(stickyElemHeight, stickyElemWidth);
+                if ( scrollTop > stickyElemOffset || stickyElemOffset == 0) {
+                    $(element).fixedPosition(stickyElemWidth);
                 }
-                else if ( scrollTop < stickyElemOffset ) {
+                else if ( scrollTop < stickyElemOffset && stickyElemOffset != 0 || plugin.settings.scrollUntil) {
                     stickyElem.unFixedPosition();
                 }
                 if ( plugin.settings.scrollUntil ) {
@@ -93,7 +95,15 @@
                         stickyElem.unFixedPosition();
                     }
                 }
+
+            }
+
+
+            // Run function initially and on events
+            $(window).on('ready resize scroll', function() {
+                makeSticky();
             });
+
 
             // Check the position of elements in the markup
             $.fn.isAfter = function(elem) {
@@ -138,7 +148,6 @@
                     });
                 });
             }
-
         }
 
         plugin.init();
