@@ -36,21 +36,40 @@
     <!-- Start sticky anchor areas -->
     <div class="demo_container">
         <p>
-            I stick
+            I stick 1
         </p>
         <p>
-            I stick
+            I stick 2
         </p>
         <p>
-            I stick
+            I stick 3
         </p>
         <p>
-            I stick
+            I stick 4
+        </p>
+        <p>
+            I stick 5
+        </p>
+        <p>
+            I stick 6
+        </p>
+        <p>
+            I stick 7
+        </p>
+        <p>
+            I stick 8
+        </p>
+        <p>
+            I stick 9
+        </p>
+        <p>
+            I stick 10
         </p>
     </div>
     <!-- End responsive menu -->
 
     <div id="goto1">
+        <p><strong>Goto1</strong></p>
         <p>Tall containers</p>
         <p>are always</p>
         <p>very nice</p>
@@ -59,6 +78,7 @@
     </div>
 
     <div id="goto2" class="demo_container2" style="background: blue;">
+        <p><strong>Goto2</strong></p>
         <p>Tall containers</p>
         <p>are always</p>
         <p>very nice</p>
@@ -81,6 +101,7 @@
     <!-- End responsive menu -->
 
     <div id="goto3">
+        <p><strong>Goto3</strong></p>
         <p>Tall containers</p>
         <p>are always</p>
         <p>very nice</p>
@@ -88,6 +109,23 @@
     </div>
 
     <div id="goto4" class="demo_container4" style="background: red;">
+        <p><strong>Goto4</strong></p>
+        <p>Tall containers</p>
+        <p>are always</p>
+        <p>very nice</p>
+        <p>to look at</p>
+        <p>Tall containers</p>
+        <p>are always</p>
+        <p>very nice</p>
+        <p>to look at</p>
+        <p>Tall containers</p>
+        <p>are always</p>
+        <p>very nice</p>
+        <p>to look at</p>
+        <p>Tall containers</p>
+        <p>are always</p>
+        <p>very nice</p>
+        <p>to look at</p>
         <p>Tall containers</p>
         <p>are always</p>
         <p>very nice</p>
@@ -124,10 +162,11 @@
 <script type="text/javascript" src="js/jquery.stickyanchorareas.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
-        $('.demo_container').stickyAnchorArea({
-            scrollUntil: '.demo_container2'
+        $('.demo_container').stickyAnchorArea();
+        $('.demo_container3').stickyAnchorArea({
+            scrollFrom: '.demo_container',
+            scrollUntil: '.demo_container4'
         });
-        $('.demo_container3').stickyAnchorArea();
     });
 </script>
 

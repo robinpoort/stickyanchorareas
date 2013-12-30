@@ -9,11 +9,13 @@ body {
   background: #ccc;
   display: block;
   width: 100%;
+  z-index: 3;
 }
 .demo_container3 {
-  background: #ccc;
+  background: #0f0;
   display: block;
   width: 100%;
+  z-index: 2;
 }
 
 .demo_container:before,

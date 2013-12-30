@@ -1,7 +1,7 @@
 "use strict";
 
 /*
- * Mobile first responsive menu
+ * Sticky anchor areas
  * Copyright 2013 Robin Poort
  * http://www.robinpoort.com
  */
@@ -10,27 +10,16 @@
 
     $.stickyAnchorArea = function(element, options) {
 
-        var defaults = {}
+        var defaults = {},
+            plugin = this;
 
-        // to avoid confusions, use "plugin" to reference the
-        // current instance of the object
-        var plugin = this;
-
-        // this will hold the merged default, and user-provided options
-        // plugin's properties will be available through this object like:
-        // plugin.settings.propertyName from inside the plugin or
-        // element.data('stickyAnchorArea').settings.propertyName from outside the plugin,
-        // where "element" is the element the plugin is attached to;
         plugin.settings = {}
 
-        var $element = $(element), // reference to the jQuery version of DOM element
-            element = element;    // reference to the actual DOM element
+        var $element = $(element),
+            element = element;
 
-        // the "constructor" method that gets called when the object is created
         plugin.init = function() {
 
-            // the plugin's final properties are the merged default and
-            // user-provided options (if any)
             plugin.settings = $.extend({}, defaults, options);
 
             // Test if the browser supports position fixed by testing the top offset of a fixed element
@@ -40,62 +29,149 @@
             $('#canBrowserhandleFixedPosition').remove();
 
             // Variables
-            var stickyElem = $(element),
-                stickyElemHeight = $(element).outerHeight(),
-                stickyElemZindex = $(element).css('z-index'),
+            var stickyElement = $(element),
+                stickyElementHeight = $(element).outerHeight(),
+                stickyElementZindex = $(element).css('z-index'),
                 urlHash = window.location.hash;
 
+            // Variables for scrollFrom
+            if ( plugin.settings.scrollFrom ) {
+                var scrollFromContainer = plugin.settings.scrollFrom;
+            }
 
-            // ScrollUntil
-            if( plugin.settings.scrollUntil ) {
+            // Variables for ScrollUntil
+            if ( plugin.settings.scrollUntil ) {
                 var scrollUntilContainer = plugin.settings.scrollUntil;
             }
 
 
             // Custom functions
-            $.fn.fixedPosition = function(stickyElemWidth) {
-                this.css({'position' : 'fixed', 'top' : '0', 'height' : 'auto', 'width' : stickyElemWidth});
+            $.fn.fixedPosition = function(scrollFromHeight, stickyElementWidth) {
+                this.css({'position' : 'fixed', 'top' : scrollFromHeight, 'height' : 'auto', 'width' : stickyElementWidth});
             }
             $.fn.unFixedPosition = function() {
                 this.removeAttr('style');
             }
 
 
-            // Add div to all elements after the sticky area who are linked to or are the location.hash
-            stickyElem.wrap('<div class="stickAround"></div>');
+            // Add div to all sticky elements
+            stickyElement.wrap('<div class="stickAround"></div>');
 
 
             function makeSticky() {
                 var scrollTop = Math.ceil( $(window).scrollTop()),
-                    stickyElemOffset = Math.ceil(stickyElem.parent('.stickAround').offset().top),
-                    stickyElemHeight = $(element).outerHeight(),
-                    stickyElemWidth = stickyElem.parent('.stickAround').width();
+                    stickyElementParent = stickyElement.parent('.stickAround'),
+                    stickyElementOffset = Math.ceil(stickyElement.parent('.stickAround').offset().top),
+                    stickyElementHeight = $(element).outerHeight(),
+                    stickyElementWidth = stickyElementParent.width(),
+                    scrollFromHeight = '0',
+                    windowHeight = $(window).height();
+
+                // Variables for scrollFrom
+                if ( plugin.settings.scrollFrom ) {
+                    var scrollFromHeight = Math.ceil( $(scrollFromContainer).outerHeight()),
+                        scrollUntilNewTop = scrollTop + scrollFromHeight;
+                }
+
+                // Variables for ScrollUntil
+                if ( plugin.settings.scrollUntil ) {
+                    if ( plugin.settings.scrollFrom && scrollFromHeight <= windowHeight ) {
+                        var scrollUntil = (Math.ceil( $(scrollUntilContainer).offset().top)) - scrollFromHeight,
+                            scrollUntilPosition = (scrollUntil - stickyElementOffset + (scrollFromHeight - stickyElementHeight) );
+                    } else {
+                        var scrollUntil = Math.ceil( $(scrollUntilContainer).offset().top),
+                            scrollUntilPosition = (scrollUntil - stickyElementOffset - stickyElementHeight);
+                    }
+                }
 
 
                 // Give the surrounding div the height of the element
-                stickyElem.parent().css({ 'position' : 'relative', 'height' : stickyElemHeight, 'z-index' : stickyElemZindex });
-
-
-                if( plugin.settings.scrollUntil ) {
-                    var scrollUntil = Math.ceil( $(scrollUntilContainer).offset().top),
-                        absolutePosition = (scrollUntil - stickyElemOffset - stickyElemHeight);
+                if ( !stickyElementParent.hasClass('child-to-tall') ) {
+                    stickyElementParent.css({ 'position' : 'relative', 'height' : stickyElementHeight, 'z-index' : stickyElementZindex });
                 }
 
-                if ( scrollTop > stickyElemOffset || stickyElemOffset == 0) {
-                    $(element).fixedPosition(stickyElemWidth);
+
+                // Already sticking element taller than viewport?
+                if ( stickyElementHeight >= windowHeight && stickyElement.css('position') == 'fixed' ) {
+                    var stickyTopOffset = stickyElement.offset().top;
+                    stickyElementParent.css('position', 'static').addClass('child-to-tall');
+                    stickyElement.css({'position': 'absolute', 'top' : stickyTopOffset }).addClass('to-tall');
                 }
-                else if ( scrollTop < stickyElemOffset && stickyElemOffset != 0 || plugin.settings.scrollUntil) {
-                    stickyElem.unFixedPosition();
-                }
-                if ( plugin.settings.scrollUntil ) {
-                    if ( scrollTop > (scrollUntil - stickyElemHeight) ) {
-                        stickyElem.css({'position' : 'absolute', 'top' : absolutePosition });
-                    }
-                    if ( scrollTop > scrollUntil ) {
-                        stickyElem.unFixedPosition();
+                // Sticky element taller than viewport and scrolltop smaller than the offset of our stickAround container?
+                else if ( scrollTop <= stickyElementParent.offset().top && stickyElementHeight >= windowHeight ) {
+                    stickyElement.unFixedPosition();
+                    if ( stickyElement.hasClass('child-to-tall') ) {
+                        stickyElement.removeClass('child-to-tall');
                     }
                 }
+                // Keep already sticking elements in "fake fixed position" when scrolling to the top
+                else if ( scrollTop < stickyElement.offset().top && stickyElementHeight >= windowHeight && stickyElement.css('position') == 'absolute' ) {
+                    stickyElement.css({'position': 'absolute', 'top' : scrollTop }).addClass('to-tall');
+                }
+                // remove classes when viewport is large enough again
+                else if ( stickyElementHeight < windowHeight ) {
+                    if ( stickyElementParent.hasClass('child-to-tall') ) {
+                        stickyElementParent.removeClass('child-to-tall');
+                    }
+                    if ( stickyElement.hasClass('to-tall') ) {
+                        stickyElement.removeClass('to-tall');
+                    }
+                }
+                // Make elements sticky when element is smaller than viewport height
+                if ( !stickyElement.hasClass('to-tall') ) {
 
+                    // Make element sticky
+                    if ( scrollTop > stickyElementOffset || stickyElementOffset == 0) {
+                        $(element).fixedPosition(scrollFromHeight, stickyElementWidth);
+                    }
+
+                    // scrollFrom
+                    if ( plugin.settings.scrollFrom ) {
+                        if ( scrollFromHeight <= windowHeight ) {
+                            if ( stickyElementOffset <= scrollUntilNewTop ) {
+                                stickyElement.fixedPosition(scrollFromHeight, stickyElementWidth);
+                            }
+                            if ( stickyElementOffset > scrollUntilNewTop ) {
+                                stickyElement.unFixedPosition();
+                            }
+                        } else if ( scrollTop > stickyElementOffset) {
+                            stickyElement.fixedPosition(0, stickyElementWidth);
+                        }
+                    }
+
+
+                    // Make element unsticky
+                    if ( scrollTop < stickyElementOffset && stickyElementOffset != 0 && ( !plugin.settings.scrollFrom || !plugin.settings.scrollFrom ) ) {
+                        stickyElement.unFixedPosition();
+                    } else if ( scrollTop < stickyElementOffset && scrollFromHeight >= windowHeight) {
+                        stickyElement.unFixedPosition();
+                    }
+
+                    // Stickyness when scrollUntil is used
+                    if ( plugin.settings.scrollUntil ) {
+                        if ( scrollTop > (scrollUntil - stickyElementHeight) ) {
+                            stickyElement.css({'position' : 'absolute', 'top' : scrollUntilPosition });
+                        }
+                        if ( scrollTop > scrollUntil ) {
+                            stickyElement.unFixedPosition();
+                        }
+                    }
+
+                }
+
+            }
+
+
+            // Fix the anchor linking with multiple sticky areas on top of each other
+
+
+            if ( plugin.settings.scrollFrom && ( $(scrollFromContainer).height() <= $(window).height() ) ) {
+                var stickyElementOffset = stickyElementHeight + $(scrollFromContainer).height();
+            }
+            if ( plugin.settings.scrollFrom && ( $(scrollFromContainer).height() > $(window).height() ) ) {
+                var stickyElementOffset = 0;
+            } else {
+                var stickyElementOffset = stickyElementHeight;
             }
 
 
@@ -116,14 +192,14 @@
 
             // The function to call for adding divs
             function addAnchorDiv(elem) {
-                if( $(elem).isAfter(stickyElem)) {
+                if( $(elem).isAfter(stickyElement)) {
 
                     var elemClean = elem.replace('#', '');
 
                     // Check if the current anchor was already processed
                     if($.inArray(elemClean, elements) == -1)
                     {
-                        $(elem).before('<div class="relativeAnchorDiv" id="'+elemClean+'" style="position:relative;top:-'+stickyElemHeight+'px;z-index:-99;height:0;overflow:hidden;">');
+                        $(elem).before('<div class="relativeAnchorDiv" id="'+elemClean+'" style="position:relative;top:-'+stickyElementOffset+'px;z-index:-99;height:0;overflow:hidden;">');
 
                         // Add current anchor to array
                         elements.push(elemClean);
