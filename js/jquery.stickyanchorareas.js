@@ -91,6 +91,13 @@
                 }
 
 
+                // Sticky element taller than viewport?
+                if ( stickyElementHeight >= windowHeight ) {
+                    var stickyTopOffset = stickyElement.offset().top;
+                    stickyElementParent.addClass('child-to-tall');
+                    stickyElement.addClass('to-tall');
+                }
+
                 // Already sticking element taller than viewport?
                 if ( stickyElementHeight >= windowHeight && stickyElement.css('position') == 'fixed' ) {
                     var stickyTopOffset = stickyElement.offset().top;
@@ -162,19 +169,6 @@
             }
 
 
-            // Fix the anchor linking with multiple sticky areas on top of each other
-
-
-            if ( plugin.settings.scrollFrom && ( $(scrollFromContainer).height() <= $(window).height() ) ) {
-                var stickyElementOffset = stickyElementHeight + $(scrollFromContainer).height();
-            }
-            if ( plugin.settings.scrollFrom && ( $(scrollFromContainer).height() > $(window).height() ) ) {
-                var stickyElementOffset = 0;
-            } else {
-                var stickyElementOffset = stickyElementHeight;
-            }
-
-
             // Run function initially and on events
             $(window).on('ready resize scroll', function() {
                 makeSticky();
@@ -186,6 +180,20 @@
                 if(typeof(elem) == "string") elem = $(elem);
                 return this.add(elem).index(elem) == 0;
             }
+
+
+            // set the offset of the element
+            if ( plugin.settings.scrollFrom ) {
+                var scrollFromHeight = $(scrollFromContainer).outerHeight();
+                if ( scrollFromHeight > $(window).height ) {
+                    var stickyElementOffset = 0;
+                } else {
+                    var stickyElementOffset = stickyElementHeight + $(scrollFromContainer).outerHeight();
+                }
+            } else {
+                var stickyElementOffset = stickyElementHeight;
+            }
+
 
             // Create empty anchors array
             var elements = [];
@@ -206,6 +214,7 @@
                     }
                 }
             }
+
 
             if( theOffset == true ) {
 
