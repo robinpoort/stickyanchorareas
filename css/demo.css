@@ -37,3 +37,11 @@ body {
 .demo_container3:after {
   clear: both;
 }
+
+.tester_on {
+  padding: 30px;
+  background: #333;
+  color: #fff;
+  border: 5px solid black;
+  box-sizing: border-box;
+}

@@ -29,9 +29,9 @@
             $('#canBrowserhandleFixedPosition').remove();
 
             // Variables
-            var stickyElement = $(element),
-                stickyElementHeight = $(element).outerHeight(),
-                stickyElementZindex = $(element).css('z-index'),
+            var stickyElement = $element,
+                stickyElementHeight = $element.outerHeight(),
+                stickyElementZindex = $element.css('z-index'),
                 urlHash = window.location.hash;
 
             // Variables for scrollFrom
@@ -59,12 +59,14 @@
 
 
             function makeSticky() {
+
                 var scrollTop = Math.ceil( $(window).scrollTop()),
                     stickyElementParent = stickyElement.parent('.stickAround'),
                     stickyElementOffset = Math.ceil(stickyElement.parent('.stickAround').offset().top),
-                    stickyElementHeight = $(element).outerHeight(),
+                    stickyElementHeight = $element.outerHeight(),
                     stickyElementWidth = stickyElementParent.width(),
                     scrollFromHeight = '0',
+                    windowWidth = $(window).width(),
                     windowHeight = $(window).height();
 
                 // Variables for scrollFrom
@@ -84,39 +86,97 @@
                     }
                 }
 
+                if ( ( ( plugin.settings.stickyFromWidth && plugin.settings.stickyFromHeight ) &&
+                       ( windowWidth >= plugin.settings.stickyFromWidth && windowHeight >= plugin.settings.stickyFromHeight) ) ||
+                     ( ( windowWidth >= plugin.settings.stickyFromWidth && !plugin.settings.stickyFromHeight ) ||
+                       ( windowHeight >= plugin.settings.stickyFromHeight && !plugin.settings.stickyFromWidth ) ) ||
+                     !plugin.settings.stickyFromWidth && !plugin.settings.stickyFromHeight ) {
 
-                // Give the surrounding div the height of the element
-                if ( !stickyElementParent.hasClass('child-to-tall') ) {
-                    stickyElementParent.css({ 'position' : 'relative', 'height' : stickyElementHeight, 'z-index' : stickyElementZindex });
-                }
-
-
-                // Sticky element taller than viewport?
-                if ( stickyElementHeight >= windowHeight ) {
-                    var stickyTopOffset = stickyElement.offset().top;
-                    stickyElementParent.addClass('child-to-tall');
-                    stickyElement.addClass('to-tall');
-                }
-
-                // Already sticking element taller than viewport?
-                if ( stickyElementHeight >= windowHeight && stickyElement.css('position') == 'fixed' ) {
-                    var stickyTopOffset = stickyElement.offset().top;
-                    stickyElementParent.css('position', 'static').addClass('child-to-tall');
-                    stickyElement.css({'position': 'absolute', 'top' : stickyTopOffset }).addClass('to-tall');
-                }
-                // Sticky element taller than viewport and scrolltop smaller than the offset of our stickAround container?
-                else if ( scrollTop <= stickyElementParent.offset().top && stickyElementHeight >= windowHeight ) {
-                    stickyElement.unFixedPosition();
-                    if ( stickyElement.hasClass('child-to-tall') ) {
-                        stickyElement.removeClass('child-to-tall');
+                    // Give the surrounding div the height of the element
+                    if ( !stickyElementParent.hasClass('child-to-tall') ) {
+                        stickyElementParent.css({ 'position' : 'relative', 'height' : stickyElementHeight, 'z-index' : stickyElementZindex });
                     }
-                }
-                // Keep already sticking elements in "fake fixed position" when scrolling to the top
-                else if ( scrollTop < stickyElement.offset().top && stickyElementHeight >= windowHeight && stickyElement.css('position') == 'absolute' ) {
-                    stickyElement.css({'position': 'absolute', 'top' : scrollTop }).addClass('to-tall');
-                }
-                // remove classes when viewport is large enough again
-                else if ( stickyElementHeight < windowHeight ) {
+
+
+                    // Sticky element taller than viewport?
+                    if ( stickyElementHeight >= windowHeight ) {
+                        var stickyTopOffset = stickyElement.offset().top;
+                        stickyElementParent.addClass('child-to-tall');
+                        stickyElement.addClass('to-tall');
+                    }
+
+                    // Already sticking element taller than viewport?
+                    if ( stickyElementHeight >= windowHeight && stickyElement.css('position') == 'fixed' ) {
+                        var stickyTopOffset = stickyElement.offset().top;
+                        stickyElementParent.css('position', 'static').addClass('child-to-tall');
+                        stickyElement.css({'position': 'absolute', 'top' : stickyTopOffset, 'height' : 'auto', 'width' : stickyElementWidth }).addClass('to-tall');
+                    }
+                    // Sticky element taller than viewport and scrolltop smaller than the offset of our stickAround container?
+                    else if ( scrollTop <= stickyElementParent.offset().top && stickyElementHeight >= windowHeight ) {
+                        stickyElement.unFixedPosition();
+                        if ( stickyElement.hasClass('child-to-tall') ) {
+                            stickyElement.removeClass('child-to-tall');
+                        }
+                    }
+                    // Keep already sticking elements in "fake fixed position" when scrolling to the top
+                    else if ( scrollTop < stickyElement.offset().top && stickyElementHeight >= windowHeight && stickyElement.css('position') == 'absolute' ) {
+                        stickyElement.css({'position': 'absolute', 'top' : scrollTop }).addClass('to-tall');
+                    }
+                    // Keep element as big as the viewport
+                    else if ( stickyElementHeight >= windowHeight && stickyElement.css('position') == 'absolute' && stickyElement.hasClass('to-tall') ) {
+                        stickyElement.css({ 'height' : 'auto', 'width' : stickyElementWidth });
+                    }
+                    // remove classes when viewport is large enough again
+                    else if ( stickyElementHeight < windowHeight ) {
+                        if ( stickyElementParent.hasClass('child-to-tall') ) {
+                            stickyElementParent.removeClass('child-to-tall');
+                        }
+                        if ( stickyElement.hasClass('to-tall') ) {
+                            stickyElement.removeClass('to-tall');
+                        }
+                    }
+                    // Make elements sticky when element is smaller than viewport height
+                    if ( !stickyElement.hasClass('to-tall') ) {
+
+                        // Make element sticky
+                        if ( scrollTop > stickyElementOffset || stickyElementOffset == 0) {
+                            $(element).fixedPosition(scrollFromHeight, stickyElementWidth);
+                        }
+
+                        // scrollFrom
+                        if ( plugin.settings.scrollFrom ) {
+                            if ( scrollFromHeight <= windowHeight ) {
+                                if ( stickyElementOffset <= scrollUntilNewTop ) {
+                                    stickyElement.fixedPosition(scrollFromHeight, stickyElementWidth);
+                                }
+                                if ( stickyElementOffset > scrollUntilNewTop ) {
+                                    stickyElement.unFixedPosition();
+                                }
+                            } else if ( scrollTop > stickyElementOffset) {
+                                stickyElement.fixedPosition(0, stickyElementWidth);
+                            }
+                        }
+
+
+                        // Make element unsticky
+                        if ( scrollTop < stickyElementOffset && stickyElementOffset != 0 && ( !plugin.settings.scrollFrom || !plugin.settings.scrollFrom ) ) {
+                            stickyElement.unFixedPosition();
+                        } else if ( scrollTop < stickyElementOffset && scrollFromHeight >= windowHeight) {
+                            stickyElement.unFixedPosition();
+                        }
+
+                        // Stickyness when scrollUntil is used
+                        if ( plugin.settings.scrollUntil ) {
+                            if ( scrollTop > (scrollUntil - stickyElementHeight) ) {
+                                stickyElement.css({'position' : 'absolute', 'top' : scrollUntilPosition });
+                            }
+                            if ( scrollTop > scrollUntil ) {
+                                stickyElement.unFixedPosition();
+                            }
+                        }
+                    }
+                } else {
+                    stickyElement.unFixedPosition();
                     if ( stickyElementParent.hasClass('child-to-tall') ) {
                         stickyElementParent.removeClass('child-to-tall');
                     }
@@ -124,48 +184,6 @@
                         stickyElement.removeClass('to-tall');
                     }
                 }
-                // Make elements sticky when element is smaller than viewport height
-                if ( !stickyElement.hasClass('to-tall') ) {
-
-                    // Make element sticky
-                    if ( scrollTop > stickyElementOffset || stickyElementOffset == 0) {
-                        $(element).fixedPosition(scrollFromHeight, stickyElementWidth);
-                    }
-
-                    // scrollFrom
-                    if ( plugin.settings.scrollFrom ) {
-                        if ( scrollFromHeight <= windowHeight ) {
-                            if ( stickyElementOffset <= scrollUntilNewTop ) {
-                                stickyElement.fixedPosition(scrollFromHeight, stickyElementWidth);
-                            }
-                            if ( stickyElementOffset > scrollUntilNewTop ) {
-                                stickyElement.unFixedPosition();
-                            }
-                        } else if ( scrollTop > stickyElementOffset) {
-                            stickyElement.fixedPosition(0, stickyElementWidth);
-                        }
-                    }
-
-
-                    // Make element unsticky
-                    if ( scrollTop < stickyElementOffset && stickyElementOffset != 0 && ( !plugin.settings.scrollFrom || !plugin.settings.scrollFrom ) ) {
-                        stickyElement.unFixedPosition();
-                    } else if ( scrollTop < stickyElementOffset && scrollFromHeight >= windowHeight) {
-                        stickyElement.unFixedPosition();
-                    }
-
-                    // Stickyness when scrollUntil is used
-                    if ( plugin.settings.scrollUntil ) {
-                        if ( scrollTop > (scrollUntil - stickyElementHeight) ) {
-                            stickyElement.css({'position' : 'absolute', 'top' : scrollUntilPosition });
-                        }
-                        if ( scrollTop > scrollUntil ) {
-                            stickyElement.unFixedPosition();
-                        }
-                    }
-
-                }
-
             }
 
 

@@ -108,6 +108,18 @@
         <p>to look at</p>
     </div>
 
+    <div class="tester_on">
+        Ik blijf hangen
+    </div>
+
+    <div class="tester_on">
+        Ik blijf hangen
+    </div>
+
+    <div class="tester_on">
+        Ik blijf hangen
+    </div>
+
     <div id="goto4" class="demo_container4" style="background: red;">
         <p><strong>Goto4</strong></p>
         <p>Tall containers</p>
@@ -162,9 +174,15 @@
 <script type="text/javascript" src="js/jquery.stickyanchorareas.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
-        $('.demo_container').stickyAnchorArea();
+        $('.demo_container').stickyAnchorArea({
+            scrollUntil: '.demo_container2',
+            stickyFromWidth: '600',
+            stickyFromHeight: '600'
+        });
         $('.demo_container3').stickyAnchorArea({
-            scrollFrom: '.demo_container',
+            scrollUntil: '.tester_on'
+        });
+        $('.tester_on').stickyAnchorArea({
             scrollUntil: '.demo_container4'
         });
     });
