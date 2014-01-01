@@ -1,12 +1,12 @@
-"use strict";
-
-/*
+/* @preserve
  * Sticky Anchor Areas
  * Make elements sticky to the top of the document
  * and keep anchor scrolling support from both links and the window.location.hash
  * Copyright 2013 Robin Poort
  * http://www.robinpoort.com
  */
+
+"use strict";
 
 ;(function($) {
 
@@ -91,10 +91,10 @@
 
                 // Check wether stickyFromWidth or stickyFromHeight is being used
                 if ( ( ( plugin.settings.stickyFromWidth && plugin.settings.stickyFromHeight ) &&
-                       ( windowWidth >= plugin.settings.stickyFromWidth && windowHeight >= plugin.settings.stickyFromHeight) ) ||
-                     ( ( windowWidth >= plugin.settings.stickyFromWidth && !plugin.settings.stickyFromHeight ) ||
-                       ( windowHeight >= plugin.settings.stickyFromHeight && !plugin.settings.stickyFromWidth ) ) ||
-                     !plugin.settings.stickyFromWidth && !plugin.settings.stickyFromHeight ) {
+                    ( windowWidth >= plugin.settings.stickyFromWidth && windowHeight >= plugin.settings.stickyFromHeight) ) ||
+                    ( ( windowWidth >= plugin.settings.stickyFromWidth && !plugin.settings.stickyFromHeight ) ||
+                        ( windowHeight >= plugin.settings.stickyFromHeight && !plugin.settings.stickyFromWidth ) ) ||
+                    !plugin.settings.stickyFromWidth && !plugin.settings.stickyFromHeight ) {
 
                     // Give the surrounding div the height of the element
                     if ( !stickyElementParent.hasClass('child-to-tall') ) {
