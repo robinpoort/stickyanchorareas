@@ -10,6 +10,12 @@
 
 ;(function($) {
 
+    // Test if the browser supports position fixed by testing the top offset of a fixed element
+    $('<div id="canBrowserhandleFixedPosition" style="position:fixed;width:0;height:0;overflow:hidden;top:100px;"></div>').prependTo('body');
+    var theOffset = $('#canBrowserhandleFixedPosition').offset().top;
+    if( theOffset >= 100 ) { theOffset = true } else { theOffset = false }
+    $('#canBrowserhandleFixedPosition').remove();
+
     $.stickyAnchorArea = function(element, options) {
 
         var defaults = {},
@@ -24,17 +30,10 @@
 
             plugin.settings = $.extend({}, defaults, options);
 
-            // Test if the browser supports position fixed by testing the top offset of a fixed element
-            $('<div id="canBrowserhandleFixedPosition" style="position:fixed;width:0;height:0;overflow:hidden;top:100px;"></div>').prependTo('body');
-            var theOffset = $('#canBrowserhandleFixedPosition').offset().top;
-            if( theOffset >= 100 ) { theOffset = true } else { theOffset = false }
-            $('#canBrowserhandleFixedPosition').remove();
-
             // Setting variables initially
             var stickyElement = $element,
                 stickyElementHeight = $element.outerHeight(),
-                stickyElementZindex = $element.css('z-index'),
-                urlHash = window.location.hash;
+                stickyElementZindex = $element.css('z-index');
 
             // Variables for scrollFrom
             if ( plugin.settings.scrollFrom ) {
@@ -192,6 +191,11 @@
                         stickyElement.removeClass('to-tall');
                     }
                 }
+
+                if( stickyElement.parent('.stickyParent').height() > stickyElement.outerHeight() ) {
+                    stickyElementParent.css('height', stickyElement.outerHeight() );
+                }
+
             }
 
 
@@ -199,78 +203,55 @@
             $(window).on('ready resize scroll', function() {
                 makeSticky();
             });
-
-
-            // Check the position of elements in the markup
-            $.fn.isAfter = function(elem) {
-                if(typeof(elem) == "string") elem = $(elem);
-                return this.add(elem).index(elem) == 0;
-            }
-
-
-            // set the offset of the element
-            if ( plugin.settings.scrollFrom ) {
-                var scrollFromHeight = $(scrollFromContainer).outerHeight();
-                if ( scrollFromHeight > $(window).height ) {
-                    var stickyElementOffset = 0;
-                } else {
-                    var stickyElementOffset = stickyElementHeight + $(scrollFromContainer).outerHeight();
-                }
-            } else {
-                var stickyElementOffset = stickyElementHeight;
-            }
-
-
-            // Create empty anchors array
-            var elements = [];
-
-            // The function to call for adding divs
-            function addAnchorDiv(elem) {
-                if( $(elem).isAfter(stickyElement)) {
-
-                    var elemClean = elem.replace('#', '');
-
-                    // Check if the current anchor was already processed
-                    if($.inArray(elemClean, elements) == -1)
-                    {
-                        $(elem).before('<div class="relativeAnchorDiv" id="'+elemClean+'" style="position:relative;top:-'+stickyElementOffset+'px;z-index:-99;height:0;overflow:hidden;">');
-
-                        // Add current anchor to array
-                        elements.push(elemClean);
-                    }
-                }
-            }
-
-
-            if( theOffset == true ) {
-
-                // The URL method
-                addAnchorDiv(urlHash);
-
-                // Per link method
-                $('a[href*=#]:not([href=#])').each(function() {
-
-                    var target = $(this).prop('hash');
-
-                    // Add items
-                    $(target).each(function() {
-                        // Add extra div code
-                        addAnchorDiv(target);
-                    });
-                });
-            }
         }
 
         plugin.init();
 
     }
 
+    if( theOffset == true ) {
+
+        // Check the position of elements in the markup
+        $.fn.isAfter = function(elem) {
+            if(typeof(elem) == "string") elem = $(elem);
+            return this.add(elem).index(elem) == 0;
+        }
+
+        // Anchor links
+        $(function() {
+            $('a[href*=#]:not([href=#])').click(function() {
+                if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+                    var target = $(this.hash),
+                        target2 = $(this).prop('hash'),
+                        stickies = $('.stickyParent');
+
+                    target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+                    if (target.length) {
+                        var tester = target.offset().top;
+                        if( $(target2).isAfter(stickies) ) {
+                            tester = tester - stickies.outerHeight();
+                        }
+                        $('html,body').animate({
+                            scrollTop: tester
+                        }, 200);
+                        window.location.hash = target2;
+                        return false;
+                    }
+                }
+            });
+        });
+    }
+
+    // add the plugin to the jQuery.fn object
     $.fn.stickyAnchorArea = function(options) {
-
+        // iterate through the DOM elements we are attaching the plugin to
         return this.each(function() {
-
+            // if plugin has not already been attached to the element
             if (undefined == $(this).data('stickyAnchorArea')) {
+                // create a new instance of the plugin
                 var plugin = new $.stickyAnchorArea(this, options);
+                // in the jQuery version of the element
+                // store a reference to the plugin object
                 $(this).data('stickyAnchorArea', plugin);
             }
 
