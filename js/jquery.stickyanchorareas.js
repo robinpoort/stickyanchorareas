@@ -33,7 +33,8 @@
             // Setting variables initially
             var stickyElement = $element,
                 stickyElementHeight = $element.outerHeight(),
-                stickyElementZindex = $element.css('z-index');
+                stickyElementZindex = $element.css('z-index'),
+                scrollUntilContainerClass = '';
 
             // Variables for scrollFrom
             if ( plugin.settings.scrollFrom ) {
@@ -43,6 +44,7 @@
             // Variables for ScrollUntil
             if ( plugin.settings.scrollUntil ) {
                 var scrollUntilContainer = plugin.settings.scrollUntil;
+                scrollUntilContainerClass = ' scroll_until_' + scrollUntilContainer.substring(1);
             }
 
 
@@ -56,7 +58,7 @@
 
 
             // Add div to all sticky elements
-            stickyElement.wrap('<div class="stickyParent"></div>');
+            stickyElement.wrap('<div class="stickyParent'+scrollUntilContainerClass+'"></div>');
 
 
             // The actual function that runs it all
@@ -222,25 +224,33 @@
             $('a[href*=#]:not([href=#])').click(function() {
                 if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
                     var target = $(this.hash),
-                        target2 = $(this).prop('hash'),
-                        stickies = $('.stickyParent');
+                        original_target = $(this).prop('hash'),
+                        stickies = $('.stickyParent'),
+                        stickies_scrollUntil = $('.stickyParent[class*="scroll_until"]'),
+//                        stickies_scrollUntilClass = stickies_scrollUntil.attr('class').split(' ')[1].replace('scroll_until_', '');
 
                     target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
                     if (target.length) {
-                        var tester = target.offset().top;
-                        if( $(target2).isAfter(stickies) ) {
-                            tester = tester - stickies.outerHeight();
-                        }
-                        $('html,body').animate({
-                            scrollTop: tester
-                        }, 200);
-                        window.location.hash = target2;
+                        var scrollTopAmount = Math.ceil(target.offset().top);
+//                        if( $(original_target).isAfter(stickies) && $(original_target).isAfter('.'+stickies_scrollUntilClass) ) {
+//                            var scrollUntilHeight = Math.ceil($(stickies_scrollUntil).outerHeight());
+//                            scrollTopAmount = (scrollTopAmount - Math.ceil(stickies.outerHeight())) + scrollUntilHeight;
+//                        } else if ( $(original_target).isAfter(stickies) ) {
+//                            scrollTopAmount = scrollTopAmount - Math.ceil(stickies.outerHeight());
+//                        }
+                        scrollTopAmount = scrollTopAmount - Math.ceil(stickies.outerHeight());
+                        $('html,body').scrollTop(scrollTopAmount);
                         return false;
+                        console.log('ik werk');
                     }
                 }
             });
         });
     }
+
+
+
+
 
     // add the plugin to the jQuery.fn object
     $.fn.stickyAnchorArea = function(options) {
