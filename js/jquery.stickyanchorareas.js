@@ -211,6 +211,7 @@
 
     }
 
+    // ANchor linking
     if( theOffset == true ) {
 
         // Check the position of elements in the markup
@@ -219,37 +220,45 @@
             return this.add(elem).index(elem) == 0;
         }
 
-        // Anchor links
         $(function() {
             $('a[href*=#]:not([href=#])').click(function() {
                 if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
                     var target = $(this.hash),
-                        original_target = $(this).prop('hash'),
-                        stickies = $('.stickyParent'),
-                        stickies_scrollUntil = $('.stickyParent[class*="scroll_until"]'),
-//                        stickies_scrollUntilClass = stickies_scrollUntil.attr('class').split(' ')[1].replace('scroll_until_', '');
+                        original_target = $(this).prop('hash');
 
                     target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
                     if (target.length) {
-                        var scrollTopAmount = Math.ceil(target.offset().top);
-//                        if( $(original_target).isAfter(stickies) && $(original_target).isAfter('.'+stickies_scrollUntilClass) ) {
-//                            var scrollUntilHeight = Math.ceil($(stickies_scrollUntil).outerHeight());
-//                            scrollTopAmount = (scrollTopAmount - Math.ceil(stickies.outerHeight())) + scrollUntilHeight;
-//                        } else if ( $(original_target).isAfter(stickies) ) {
-//                            scrollTopAmount = scrollTopAmount - Math.ceil(stickies.outerHeight());
-//                        }
-                        scrollTopAmount = scrollTopAmount - Math.ceil(stickies.outerHeight());
+                        var scrollTopAmount = Math.ceil(target.offset().top),
+                            scrollUntilHeight1 = 0,
+                            scrollUntilHeight2 = 0,
+                            scrollUntilHeight = 0;
+
+                        $('.stickyParent').each(function () {
+                            // Add heights
+                            if ( $(original_target).isAfter( $(this) ) ) {
+                                scrollUntilHeight2 += $(this).outerHeight();
+                            }
+                            // Reduce heights
+                            if ( $(this).is('[class*="scroll_until"]') ) {
+
+                                var testing = $(this).attr('class').split(' ')[1].replace('scroll_until_', ''),
+                                    testing2 = $('.'+testing);
+
+                                if ( $(original_target).isAfter( testing2 ) ) {
+                                    scrollUntilHeight1 += $(this).outerHeight();
+                                }
+                            }
+                            scrollUntilHeight = scrollUntilHeight2 - scrollUntilHeight1;
+                        })
+
+                        scrollTopAmount -= scrollUntilHeight;
                         $('html,body').scrollTop(scrollTopAmount);
                         return false;
-                        console.log('ik werk');
                     }
                 }
             });
         });
     }
-
-
-
 
 
     // add the plugin to the jQuery.fn object
