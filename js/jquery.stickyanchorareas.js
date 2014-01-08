@@ -220,43 +220,79 @@
             return this.add(elem).index(elem) == 0;
         }
 
-        $(function() {
-            $('a[href*=#]:not([href=#])').click(function() {
-                if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
-                    var target = $(this.hash),
-                        original_target = $(this).prop('hash');
+        $(window).load(function(event) {
 
-                    target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
-                    if (target.length) {
-                        var scrollTopAmount = Math.ceil(target.offset().top),
-                            scrollUntilHeight1 = 0,
-                            scrollUntilHeight2 = 0,
-                            scrollUntilHeight = 0;
+            event.preventDefault();
 
-                        $('.stickyParent').each(function () {
-                            // Add heights
-                            if ( $(original_target).isAfter( $(this) ) ) {
-                                scrollUntilHeight2 += $(this).outerHeight();
-                            }
-                            // Reduce heights
-                            if ( $(this).is('[class*="scroll_until"]') ) {
+            if(window.location.hash) {
+                var target = window.location.hash,
+                    original_target = window.location.hash;
 
-                                var testing = $(this).attr('class').split(' ')[1].replace('scroll_until_', ''),
-                                    testing2 = $('.'+testing);
+                var scrollTopAmount = Math.ceil( $(target).offset().top),
+                    scrollUntilHeight1 = 0,
+                    scrollUntilHeight2 = 0,
+                    scrollUntilHeight = 0;
 
-                                if ( $(original_target).isAfter( testing2 ) ) {
-                                    scrollUntilHeight1 += $(this).outerHeight();
-                                }
-                            }
-                            scrollUntilHeight = scrollUntilHeight2 - scrollUntilHeight1;
-                        })
-
-                        scrollTopAmount -= scrollUntilHeight;
-                        $('html,body').scrollTop(scrollTopAmount);
-                        return false;
+                $('.stickyParent').each(function () {
+                    // Add heights
+                    if ( $(original_target).isAfter( $(this) ) ) {
+                        scrollUntilHeight2 += $(this).outerHeight();
                     }
+                    // Reduce heights
+                    if ( $(this).is('[class*="scroll_until"]') ) {
+
+                        var scrollClass = $(this).attr('class').split(' ')[1].replace('scroll_until_', ''),
+                            scrollClass = $('.'+scrollClass);
+
+                        if ( $(original_target).isAfter( scrollClass ) ) {
+                            scrollUntilHeight1 += $(this).outerHeight();
+                        }
+                    }
+                    scrollUntilHeight = scrollUntilHeight2 - scrollUntilHeight1;
+                })
+
+                scrollTopAmount -= scrollUntilHeight;
+                $('html,body').scrollTop(scrollTopAmount);
+            }
+        });
+
+
+        $('a[href*=#]:not([href=#])').click(function() {
+            if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+                var target = $(this.hash),
+                    original_target = $(this).prop('hash');
+
+                target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+                if (target.length) {
+                    var scrollTopAmount = Math.ceil(target.offset().top),
+                        scrollUntilHeight1 = 0,
+                        scrollUntilHeight2 = 0,
+                        scrollUntilHeight = 0;
+
+                    $('.stickyParent').each(function () {
+                        // Add heights
+                        if ( $(original_target).isAfter( $(this) ) ) {
+                            scrollUntilHeight2 += $(this).outerHeight();
+                        }
+                        // Reduce heights
+                        if ( $(this).is('[class*="scroll_until"]') ) {
+
+                            var testing = $(this).attr('class').split(' ')[1].replace('scroll_until_', ''),
+                                testing2 = $('.'+testing);
+
+                            if ( $(original_target).isAfter( testing2 ) ) {
+                                scrollUntilHeight1 += $(this).outerHeight();
+                            }
+                        }
+                        scrollUntilHeight = scrollUntilHeight2 - scrollUntilHeight1;
+                    })
+
+                    scrollTopAmount -= scrollUntilHeight;
+                    window.location.hash = original_target;
+                    $('html,body').scrollTop(scrollTopAmount);
+                    return false;
                 }
-            });
+            }
         });
     }
 

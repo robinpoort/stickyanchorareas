@@ -5,6 +5,16 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+p {
+  margin: 0 0 1em;
+}
+
+div:after {
+  display: table;
+  content: " ";
+  clear: both;
+}
+
 .demo_container {
   background: #ccc;
   display: block;
