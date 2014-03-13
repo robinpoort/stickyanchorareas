@@ -1,57 +1,107 @@
+html,
+body {
+  height: 100%;
+}
+
 body {
   background: #eee;
   margin: 0;
-  padding: 20px;
+  padding: 0;
   font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5em;
+  color: #333;
+}
+
+h1, h2, h3 {
+  margin: 0 0 16px;
+}
+
+h2 span {
+  font-size: 16px;
+}
+
+h2 span:before {
+  content: '(';
+}
+h2 span:after {
+  content: ')';
 }
 
 p {
   margin: 0 0 1em;
 }
 
+div {
+  position: relative;
+}
+div:before,
 div:after {
   display: table;
   content: " ";
+}
+div:after {
   clear: both;
 }
 
+.content_container,
 .demo_container {
-  background: #ccc;
-  display: block;
-  width: 100%;
-  z-index: 3;
-}
-.demo_container3 {
-  background: #0f0;
-  display: block;
-  width: 100%;
-  z-index: 2;
+  padding: 2em 2em 1em;
 }
 
-.demo_container:before,
-.demo_container:after {
-  display: table;
+.demo1 {
+  background: darkcyan;
+  color: white;
+}
+
+.demo4 {
+  background: darkslategray;
+  color: white;
+}
+
+.demo6 {
+  background: lightslategray;
+  color: white;
+}
+
+.demo1:before,
+.demo3:before,
+.demo4:before,
+.demo6:before,
+.demo8:before,
+#top:after,
+.demo1:after,
+.demo3:after,
+.demo4:after,
+.demo6:after {
   content: " ";
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 0px solid transparent;
+  border-right: 30px solid transparent;
+  border-top: 30px solid black;
+  position: absolute;
+  left: 0;
 }
 
-.demo_container:after {
-  clear: both;
+.demo1:before,
+.demo3:before,
+.demo4:before,
+.demo6:before,
+.demo8:before {
+  border-left: 0px solid transparent;
+  border-right: 30px solid transparent;
+  border-top: 30px solid black;
+  top: 0;
 }
 
-.demo_container3:before,
-.demo_container3:after {
-  display: table;
-  content: " ";
-}
-
-.demo_container3:after {
-  clear: both;
-}
-
-.tester_on {
-  padding: 30px;
-  background: #333;
-  color: #fff;
-  border: 5px solid black;
-  box-sizing: border-box;
+#top:after,
+.demo1:after,
+.demo3:after,
+.demo4:after,
+.demo6:after {
+  border-left: 30px solid black;
+  border-right: 0px solid transparent;
+  border-top: 30px solid transparent;
+  bottom: 0;
 }

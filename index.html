@@ -16,149 +16,98 @@
 <script type="text/javascript">function hasClass(e,t){return e.className.match(new RegExp("(\\s|^)"+t+"(\\s|$)"))}var el=document.getElementById("page");var cl="no-js";if(hasClass(el,cl)){var reg=new RegExp("(\\s|^)"+cl+"(\\s|$)");el.className=el.className.replace(reg," js-enabled")}</script>
 
 <div class="container">
-    <h1>Sticky Anchor Areas</h1>
-
-    <p>
-        Introduction, why do you need this?
-    </p>
-
-    <p>
-        <a href="#goto1">Go to 1</a>
-    </p><p>
-    <a href="#goto2">Go to 2</a>
-</p><p>
-    <a href="#goto3">Go to 3</a>
-</p><p>
-    <a href="#goto4">Go to 4</a>
-</p>
-
-    <!-- Start sticky anchor areas -->
-    <div class="demo_container">
-        <p>
-            I stick 1
-        </p>
-        <p>
-            I stick 2
-        </p>
-        <p>
-            I stick 3
-        </p>
-        <p>
-            I stick 4
-        </p>
-        <p>
-            I stick 5
-        </p>
-        <p>
-            I stick 6
-        </p>
-        <p>
-            I stick 7
-        </p>
-        <p>
-            I stick 8
-        </p>
-        <p>
-            I stick 9
-        </p>
-        <p>
-            I stick 10
-        </p>
-    </div>
-    <!-- End responsive menu -->
-
-    <div id="goto1" style="background:red;">
-        <p><strong>Goto1</strong></p>
-        <p>Tall containers</p>
-        <p>are always</p>
-        <p>very nice</p>
-        <p>to look at</p>        <p>very nice</p>
-        <p>to look at</p>
-    </div>
-
-    <div id="goto2" class="demo_container2" style="background: blue;">
-        <p><strong>Goto2</strong></p>
-        <p>Tall containers</p>
-        <p>are always</p>
-        <p>very nice</p>
-        <p>to look at</p>
-        <p>Tall containers</p>
-        <p>are always</p>
-        <p>very nice</p>
-        <p>to look at</p>
+    <div id="top" class="content_container">
+        <h1>Sticky Anchor Areas</h1>
+        <h2>Page anchors</h2>
+        <ul>
+            <li><a href="#anchor1">Go to anchor 1</a></li>
+            <li><a href="#anchor2">Go to anchor 2</a></li>
+            <li><a href="#anchor3">Go to anchor 3</a></li>
+            <li><a href="#anchor4">Go to anchor 4</a></li>
+            <li><a href="#anchor5">Go to anchor 5</a></li>
+            <li><a href="#anchor6">Go to anchor 6</a></li>
+            <li><a href="#anchor7">Go to anchor 7</a></li>
+            <li><a href="#anchor8">Go to anchor 8</a></li>
+        </ul>
     </div>
 
     <!-- Start sticky anchor areas -->
-    <div class="demo_container3">
+    <div id="anchor1" class="content_container demo1">
+        <h2>#1. I will stick to the top <span>Until I reach #3</span></h2>
         <p>
-            I stick
-        </p>
-        <p>
-            I stick
+            Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
         </p>
     </div>
-    <!-- End responsive menu -->
 
-    <div id="goto3" style="background: purple;">
-        <p><strong>Goto3</strong></p>
-        <a href="#goto1">Go to 1</a>
-        <p>Tall containers</p>
-        <p>are always</p>
-        <p>very nice</p>
-        <p>to look at</p>
+    <div id="anchor2" class="content_container demo2">
+        <h3>#2. I wont stick</h3>
+        <p>
+            Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
+        </p>
     </div>
 
-    <div class="tester_on">
-        Ik blijf hangen
+    <div id="anchor3" class="content_container demo3">
+        <h3>#3. I wont stick</h3>
+        <p>
+            Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
+        </p>
     </div>
 
-    <div id="goto4" class="demo_container4" style="background: red;">
-        <p><strong>Goto4</strong></p>
-        <a href="#goto3">Go to 3</a>
-        <p>Tall containers</p>
-        <p>are always</p>
-        <p>very nice</p>
-        <p>to look at</p>
-        <p>Tall containers</p>
-        <p>are always</p>
-        <p>very nice</p>
-        <p>to look at</p>
-        <p>Tall containers</p>
-        <p>are always</p>
-        <p>very nice</p>
-        <p>to look at</p>
-        <p>Tall containers</p>
-        <p>are always</p>
-        <p>very nice</p>
-        <p>to look at</p>
-        <p>Tall containers</p>
-        <p>are always</p>
-        <p>very nice</p>
-        <p>to look at</p>
-        <p>Tall containers</p>
-        <p>are always</p>
-        <p>very nice</p>
-        <p>to look at</p>
-        <p>Tall containers</p>
-        <p>are always</p>
-        <p>very nice</p>
-        <p>to look at</p>
-        <p>Tall containers</p>
-        <p>are always</p>
-        <p>very nice</p>
-        <p>to look at</p>
+    <div id="anchor4" class="content_container demo4">
+        <h2>#4. I will stick to the top <span>Until I reach #7</span></h2>
+        <p>
+            Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
+        </p>
+    </div>
+
+    <div id="anchor5" class="content_container demo5">
+        <h3>#5. I wont stick</h3>
+        <p>
+            Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
+        </p>
+    </div>
+
+    <div id="anchor6" class="content_container demo6">
+        <h3>#6. I will stick to #4</h3>
+        <p>
+            Donec id elit non mi porta gravida at eget metus.
+        </p>
+    </div>
+
+    <div id="anchor7" class="content_container demo7">
+        <h3>#7. I wont stick</h3>
+        <p>
+            Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
+        </p>
+    </div>
+
+    <div id="anchor8" class="content_container demo8">
+        <h3>#8. </h3>
+        <p>
+            Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
+        </p>
+        <p>
+            Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
+        </p>
+        <p>
+            Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
+        </p>
+        <p>
+            Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
+        </p>
+        <p>
+            Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
+        </p>
+        <p>
+            Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
+        </p>
+        <p>
+            Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
+        </p>
     </div>
 
     <p>
-        More explanation and examples
-    </p>
-
-    <code>
-        Code examples
-    </code>
-
-    <p>
-        Copyright 2013 Robin Poort, all rights reserved
+        Copyright 2013-2014 Robin Poort, all rights reserved
     </p>
 
 </div>
@@ -167,13 +116,16 @@
 <script type="text/javascript" src="js/jquery.stickyanchorareas.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
-        $('.demo_container').stickyAnchorArea({
-            scrollUntil: '.demo_container2'
+        $('.demo1').stickyAnchorArea({
+            scrollUntil: '.demo3'
         });
-        $('.demo_container3').stickyAnchorArea({
-            scrollUntil: '.tester_on'
+        $('.demo4').stickyAnchorArea({
+            scrollUntil: '.demo7'
         });
-        $('.tester_on').stickyAnchorArea();
+        $('.demo6').stickyAnchorArea({
+            scrollFrom: '.demo4',
+            scrollUntil: '.demo8'
+        });
     });
 </script>
 
